@@ -107,3 +107,4 @@ function isEqual(collection) {
 function checkHasLength(len) {
     return this.length === len;
 }
+// comment
