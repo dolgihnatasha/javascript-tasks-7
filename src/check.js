@@ -6,7 +6,7 @@ exports.init = function () {
         checkHasKeys: {
             value: function checkHasKeys(keys) {
                 if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error("No such method for type " + this.constructor.name)
+                    throw new Error("No such method for type " + this.constructor.name);
                 }
                 var this_keys = Object.keys(this).sort();
                 keys = keys.sort();
@@ -20,10 +20,10 @@ exports.init = function () {
         checkContainsKeys: {
             value: function checkContainsKeys(keys) {
                 if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error("No such method for type " + this.constructor.name)
+                    throw new Error("No such method for type " + this.constructor.name);
                 }
-                for (var i = 0; i < values.length; i++) {
-                    if (!this.hasOwnProperty(values[i])) {
+                for (var i = 0; i < keys.length; i++) {
+                    if (!this.hasOwnProperty(keys[i])) {
                         return false;
                     }
                 }
@@ -31,11 +31,11 @@ exports.init = function () {
             }
         },
         checkHasValueType: {
-            value: function checkHasValueType(val, type){
+            value: function checkHasValueType(val, type) {
                 if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error("No such method for type " + this.constructor.name)
+                    throw new Error("No such method for type " + this.constructor.name);
                 }
-                return this.hasOwnProperty(val) && this[val].constructor === type
+                return this.hasOwnProperty(val) && this[val].constructor === type;
             }
         },
         checkContainsValues: {
@@ -45,7 +45,7 @@ exports.init = function () {
                 }
                 for (var value of this) {
                     if (values.indexOf(value) !== -1) {
-                        values.splice(values.indexOf(value),1)
+                        values.splice(values.indexOf(value), 1)
 
                     }
                 }
@@ -55,12 +55,12 @@ exports.init = function () {
         checkHasValues: {
             value: function checkHasValues(values) {
                 if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error("No such method for type " + this.constructor.name)
+                    throw new Error("No such method for type " + this.constructor.name);
                 }
                 var this_values = [];
                 for (var key in this) {
                     if (this.hasOwnProperty(key)) {
-                        this_values.add(this[key])
+                        this_values.add(this[key]);
                     }
                 }
                 if (this_values.length !== values) {
@@ -107,4 +107,3 @@ function isEqual(collection) {
 function checkHasLength(len) {
     return this.length === len;
 }
-// comment
