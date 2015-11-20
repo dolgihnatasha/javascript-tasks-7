@@ -41,7 +41,7 @@ exports.init = function () {
         checkContainsValues: {
             value: function checkContainsValues(values) {
                 if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error('No such method for type ' + this.constructor.name)
+                    throw new Error('No such method for type ' + this.constructor.name);
                 }
                 for (var value of this) {
                     if (values.indexOf(value) !== -1) {
