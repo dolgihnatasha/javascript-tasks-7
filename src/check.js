@@ -1,27 +1,17 @@
 'use strict';
 
 exports.init = function () {
-
     Object.defineProperties(Object.prototype, {
         checkHasKeys: {
             value: function checkHasKeys(keys) {
-                if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error('No such method for type ' + this.constructor.name);
-                }
-                var this_keys = Object.keys(this).sort();
-                keys = keys.sort();
-                if (this_keys.length !== keys.length) {
-                    return false;
-                }
-                keys = this_keys.filter(isEqual(keys));
-                return keys.length === 0;
+                [Object, Array].forEach(checkType, this);
+                var thisKeys = Object.keys(this);
+                return isEqual(thisKeys, keys)
             }
         },
         checkContainsKeys: {
             value: function checkContainsKeys(keys) {
-                if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error('No such method for type ' + this.constructor.name);
-                }
+                [Object, Array].forEach(checkType, this);
                 for (var i = 0; i < keys.length; i++) {
                     if (!this.hasOwnProperty(keys[i])) {
                         return false;
@@ -32,45 +22,38 @@ exports.init = function () {
         },
         checkHasValueType: {
             value: function checkHasValueType(val, type) {
-                if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error('No such method for type ' + this.constructor.name);
-                }
-                return this.hasOwnProperty(val) && this[val].constructor === type;
+                [Object, Array].forEach(checkType, this);
+                return this.hasOwnProperty(val) &&
+                    typeof this[val] === type.toString().slice(9, -20).toLowerCase();
             }
         },
         checkContainsValues: {
             value: function checkContainsValues(values) {
-                if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error('No such method for type ' + this.constructor.name);
-                }
-                for (var value of this) {
-                    if (values.indexOf(value) !== -1) {
-                        values.splice(values.indexOf(value), 1);
-
+                [Object, Array].forEach(checkType, this);
+                var thisValues = [];
+                for (var key in Object.keys(this)) {
+                    if (this.hasOwnProperty(key)) {
+                        thisValues.add(this[key]);
                     }
                 }
-                return values.length === 0;
+                for (var i = 0; i < values; i++) {
+                    if (thisValues.indexOf(values[i]) === -1) {
+                        return false;
+                    }
+                }
+                return true;
             }
         },
         checkHasValues: {
             value: function checkHasValues(values) {
-                if (this.constructor !== Object && this.constructor !== Array) {
-                    throw new Error('No such method for type ' + this.constructor.name);
-                }
-                var this_values = [];
+                [Object, Array].forEach(checkType, this);
+                var thisValues = [];
                 for (var key in this) {
                     if (this.hasOwnProperty(key)) {
-                        this_values.add(this[key]);
+                        thisValues.add(this[key]);
                     }
                 }
-                if (this_values.length !== values) {
-                    return false;
-                }
-                this_values = this_values.sort();
-                values = values.sort();
-                values = this_values.filter(isEqual(values));
-                return values.length === 0;
-
+                return isEqual(thisValues, values);
             }
         }
     });
@@ -85,7 +68,7 @@ exports.init = function () {
         },
         checkHasWordsCount: {
             value: function checkHasWordsCount(count) {
-                return this.split(' ').length === count;
+                return this.trim().split('\s+').length === count;
             }
         }
     });
@@ -98,12 +81,27 @@ exports.init = function () {
     });
 };
 
-function isEqual(collection) {
-    return function (elem, i) {
-        return elem !== collection[i];
-    };
+function isEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+    arr1 = arr1.sort();
+    arr2 = arr2.sort();
+    for (var i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function checkHasLength(len) {
     return this.length === len;
+}
+
+function checkType(type) {
+    // это выглядит как костыль -_-
+    if (type.toString().slice(9, -20).toLowerCase() !== (typeof this)){
+        throw new Error("No such method for type " + type.toString().slice(9, -20))
+    }
 }
