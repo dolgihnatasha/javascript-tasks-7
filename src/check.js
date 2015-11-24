@@ -6,7 +6,7 @@ exports.init = function () {
             value: function checkHasKeys(keys) {
                 checkTypes([Object, Array], this);
                 var thisKeys = Object.keys(this);
-                return isEqual(thisKeys, keys)
+                return isEqual(thisKeys, keys);
             }
         },
         checkContainsKeys: {
@@ -100,8 +100,8 @@ function checkHasLength(len) {
 }
 
 function checkTypes(types, _this) {
-    if (!types.some(checkType, _this)){
-        throw new Error("No such method for type " + (typeof this));
+    if (!types.some(checkType, _this)) {
+        throw new Error('No such method for type ' + (typeof this));
     }
 }
 
