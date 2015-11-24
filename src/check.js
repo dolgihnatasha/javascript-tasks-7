@@ -4,14 +4,14 @@ exports.init = function () {
     Object.defineProperties(Object.prototype, {
         checkHasKeys: {
             value: function checkHasKeys(keys) {
-                [Object, Array].forEach(checkType, this);
+                checkTypes([Object, Array], this);
                 var thisKeys = Object.keys(this);
                 return isEqual(thisKeys, keys)
             }
         },
         checkContainsKeys: {
             value: function checkContainsKeys(keys) {
-                [Object, Array].forEach(checkType, this);
+                checkTypes([Object, Array], this);
                 for (var i = 0; i < keys.length; i++) {
                     if (!this.hasOwnProperty(keys[i])) {
                         return false;
@@ -22,18 +22,18 @@ exports.init = function () {
         },
         checkHasValueType: {
             value: function checkHasValueType(val, type) {
-                [Object, Array].forEach(checkType, this);
+                checkTypes([Object, Array], this);
                 return this.hasOwnProperty(val) &&
                     typeof this[val] === type.toString().slice(9, -20).toLowerCase();
             }
         },
         checkContainsValues: {
             value: function checkContainsValues(values) {
-                [Object, Array].forEach(checkType, this);
+                checkTypes([Object, Array], this);
                 var thisValues = [];
                 for (var key in Object.keys(this)) {
                     if (this.hasOwnProperty(key)) {
-                        thisValues.add(this[key]);
+                        thisValues.push(this[key]);
                     }
                 }
                 for (var i = 0; i < values; i++) {
@@ -46,7 +46,7 @@ exports.init = function () {
         },
         checkHasValues: {
             value: function checkHasValues(values) {
-                [Object, Array].forEach(checkType, this);
+                checkTypes([Object, Array], this);
                 var thisValues = [];
                 for (var key in this) {
                     if (this.hasOwnProperty(key)) {
@@ -68,7 +68,7 @@ exports.init = function () {
         },
         checkHasWordsCount: {
             value: function checkHasWordsCount(count) {
-                return this.trim().split('\s+').length === count;
+                return this.trim().split(/\s+/).length === count;
             }
         }
     });
@@ -99,9 +99,13 @@ function checkHasLength(len) {
     return this.length === len;
 }
 
+function checkTypes(types, _this) {
+    if (!types.some(checkType, _this)){
+        throw new Error("No such method for type " + (typeof this));
+    }
+}
+
 function checkType(type) {
     // это выглядит как костыль -_-
-    if (type.toString().slice(9, -20).toLowerCase() !== (typeof this)){
-        throw new Error("No such method for type " + type.toString().slice(9, -20))
-    }
+    return type.toString().slice(9, -20).toLowerCase() !== (typeof this);
 }
