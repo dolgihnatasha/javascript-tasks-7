@@ -26,9 +26,9 @@ exports.init = function () {
             }
         },
         checkHasValueType: {
-            value: function (key, type) {
+            value: function (key, Type) {
                 checkTypes([{}, []], this);
-                return this.hasOwnProperty(key) && checkType.call(this[key], new type());
+                return this.hasOwnProperty(key) && checkType.call(this[key], new Type());
             }
         },
         checkContainsValues: {
